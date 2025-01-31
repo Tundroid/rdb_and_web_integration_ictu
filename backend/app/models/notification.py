@@ -46,6 +46,6 @@ class NotificationSchema(Schema):
     NotificationID = fields.Int(dump_only=True)
     AdmissionID = fields.Int(required=True)
     Message = fields.Str(required=True)
-    NotificatioStatus = fields.Str(required=True)
+    NotificatioStatus = fields.Str(dump_only=True)
     CreatedAt = fields.DateTime(dump_only=True)
     UpdatedAt = fields.DateTime(dump_only=True)

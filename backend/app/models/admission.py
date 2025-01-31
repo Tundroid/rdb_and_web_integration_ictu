@@ -54,6 +54,6 @@ class AdmissionSchema(Schema):
     ApplicantID = fields.Int(required=True)
     ProgramCode = fields.Str(required=True)
     ApplicationDate = fields.Date(required=True)
-    ApplicationStatus = fields.Str(required=True)
+    ApplicationStatus = fields.Str(required=False)
     CreatedAt = fields.DateTime(dump_only=True)
     UpdatedAt = fields.DateTime(dump_only=True)

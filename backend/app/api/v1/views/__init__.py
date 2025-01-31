@@ -37,7 +37,3 @@ from api.v1.views.readers import *
 from api.v1.views.updaters import *
 from api.v1.views.deleters import *
 from api.v1.views.utils import *
-from api.v1.views.get_expenses import *
-from api.v1.views.get_incomes import *
-from api.v1.views.get_categories import *
-from api.v1.views.login_user import *

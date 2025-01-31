@@ -14,7 +14,7 @@ CREATE TABLE Applicant (
 
 CREATE TABLE Department (
     DepartmentID INT AUTO_INCREMENT PRIMARY KEY,
-    DepartmentName VARCHAR(100) NOT NULL,
+    DepartmentName VARCHAR(100) UNIQUE NOT NULL,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -45,7 +45,7 @@ CREATE TABLE Notification (
     NotificationID INT AUTO_INCREMENT PRIMARY KEY,
     AdmissionID INT NOT NULL,
     Message TEXT NOT NULL,
-    NotificatioStatus ENUM('Sent', 'Unsent') NOT NULL DEFAULT "Unsent",
+    NotificationStatus ENUM('Sent', 'Unsent') NOT NULL DEFAULT "Unsent",
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (AdmissionID) REFERENCES Admission(AdmissionID)
@@ -93,7 +93,14 @@ END ;;
 DELIMITER ;
 
 DELIMITER ;;
-CREATE DEFINER=`rdb_user`@`%` TRIGGER `CreateNotification` AFTER UPDATE ON `Admission` FOR EACH ROW 
+CREATE DEFINER=`rdb_user`@`%` TRIGGER `CreateNotificationNEW` AFTER INSERT ON `Admission` FOR EACH ROW 
+BEGIN
+    CALL CreateAdmissionNotification(NEW.AdmissionID, New.ProgramCode, NEW.ApplicationStatus);
+END ;;
+DELIMITER ;
+
+DELIMITER ;;
+CREATE DEFINER=`rdb_user`@`%` TRIGGER `CreateNotificationUPDATE` AFTER UPDATE ON `Admission` FOR EACH ROW 
 BEGIN
     IF NEW.ApplicationStatus <> OLD.ApplicationStatus THEN
         CALL CreateAdmissionNotification(NEW.AdmissionID, New.ProgramCode, NEW.ApplicationStatus);
