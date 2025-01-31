@@ -1,0 +1,11 @@
+CREATE USER 'rdb_user'@'%' IDENTIFIED BY 'rdb_pass';
+
+GRANT ALL PRIVILEGES ON *.* TO 'rdb_user'@'%' WITH GRANT OPTION;
+
+CREATE USER 'Tundroid'@'%' IDENTIFIED BY 'tundroid';
+
+GRANT ALL PRIVILEGES ON *.* TO 'Tundroid'@'%' WITH GRANT OPTION;
+
+DROP USER 'root'@'%';
+
+FLUSH PRIVILEGES;

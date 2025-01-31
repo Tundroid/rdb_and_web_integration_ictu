@@ -1,0 +1,9 @@
+gunicorn
+flask
+flask_cors
+sqlalchemy
+marshmallow
+mysqlclient
+flask_jwt_extended
+requests
+bcrypt

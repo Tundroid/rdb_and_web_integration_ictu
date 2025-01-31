@@ -1,0 +1,23 @@
+services:
+  rdb_web_db:
+    image: mysql:8.0
+    container_name: rdb_web_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rdbroot  # Replace with a secure password for production
+      MYSQL_DATABASE: rdb_web_db             # Name of the database to be created
+    ports:
+      - "33063:3306"  # Maps the MySQL port on the container to your host
+    volumes:
+      - rdb_web_db_data:/var/lib/mysql  # Persistent storage for database data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Run initialization script
+      - ./setup_empty_db.sql:/docker-entrypoint-initdb.d/setup_empty_db.sql  # Database dump
+    networks:
+      - rdb_web_network
+
+volumes:
+  rdb_web_db_data:
+
+networks:
+  rdb_web_network:
+    driver: bridge
+    external: true

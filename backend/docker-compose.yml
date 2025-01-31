@@ -1,0 +1,23 @@
+services:
+  fet_flask_app:
+    build:
+      context: ./fluid_expense_tracker  # Path to the Flask app folder containing the Dockerfile
+    container_name: fet_flask_app
+    environment:
+      FET_STORAGE_TYPE: db
+      FET_MYSQL_USER: fet_user
+      FET_MYSQL_PWD: fet_pass
+      FET_MYSQL_HOST: fet_db  # Replace with the IP or hostname of your MySQL server
+      FET_MYSQL_DB: fet_db
+      FET_ENV: dev
+    ports:
+      - "5001:5000"  # Maps container's port 5000 to host's port 5000
+    volumes:
+      - ./fluid_expense_tracker:/app  # Mounts the project directory into the container
+    networks:
+      - fet_network
+
+networks:
+  fet_network:
+    driver: bridge
+    external: true
