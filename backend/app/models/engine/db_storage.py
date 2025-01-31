@@ -4,11 +4,11 @@ Contains the class DBStorage
 """
 
 import models
-from models.budget import Budget
-from models.category import Category
-from models.expense import Expense
-from models.income import Income
-from models.saving_goal import SavingGoal
+from ictu.rdb_and_web_integration.backend.app.models.applicant import Budget
+from ictu.rdb_and_web_integration.backend.app.models.department import Category
+from ictu.rdb_and_web_integration.backend.app.models.program import Expense
+from ictu.rdb_and_web_integration.backend.app.models.admission import Income
+from ictu.rdb_and_web_integration.backend.app.models.notification import SavingGoal
 from models.saving import Saving
 from models.user import User
 from os import getenv

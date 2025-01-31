@@ -2,8 +2,8 @@
 """ Model getter API endpoints """
 
 from flask import abort, jsonify, request
-from models.income import Income
-from models.category import Category
+from ictu.rdb_and_web_integration.backend.app.models.admission import Income
+from ictu.rdb_and_web_integration.backend.app.models.department import Category
 from models import storage
 from api.v1.views import app_views
 from flask_jwt_extended import jwt_required
