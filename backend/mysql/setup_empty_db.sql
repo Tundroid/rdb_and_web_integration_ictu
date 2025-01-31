@@ -52,11 +52,11 @@ CREATE TABLE Notification (
 );
 
 DELIMITER ;;
-CREATE FUNCTION CreateAdmissionNotification(
+CREATE PROCEDURE CreateAdmissionNotification(
     AdmissionID INT,
     ProgramCode VARCHAR(10),
     NewStatus ENUM('Accepted', 'Pending', 'Rejected')
-) RETURNS INT
+)
 BEGIN
     DECLARE notificationMessage TEXT;
 
@@ -68,20 +68,20 @@ BEGIN
         " has been "
     );
 
-    IF newStatus = "Pending" THEN
+    IF NewStatus = "Pending" THEN
         SET notificationMessage = CONCAT(
             notificationMessage,
             " received and is pending review. Keep checking your mail and expect to hear from
-            us within the next five (5) working days. Thanks for applying with us.")
-    ELSEIF newStatus = "Accepted" THEN
+            us within the next five (5) working days. Thanks for applying with us.");
+    ELSEIF NewStatus = "Accepted" THEN
         SET notificationMessage = CONCAT(
             notificationMessage,
             " accepted. A follow-up mail on how to continue will be sent to you shortly.
-            In the mean time, congratulations!")
+            In the mean time, congratulations!");
     ELSE
         SET notificationMessage = CONCAT(
             notificationMessage,
-            " rejected. Reply with ""WHY?"" to find out the reason of rejection.Sorry! Better luck next time.")
+            " rejected. Reply with ""WHY?"" to find out the reason of rejection.Sorry! Better luck next time.");
     END IF;
 
     INSERT INTO Notification (AdmissionID, Message)
@@ -89,9 +89,6 @@ BEGIN
         AdmissionID, 
         notificationMessage
     );
-
-    -- Return the number of rows affected (1 if successful)
-    RETURN ROW_COUNT();
 END ;;
 DELIMITER ;
 

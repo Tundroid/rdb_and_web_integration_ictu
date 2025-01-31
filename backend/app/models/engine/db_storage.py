@@ -4,25 +4,21 @@ Contains the class DBStorage
 """
 
 import models
-from ictu.rdb_and_web_integration.backend.app.models.applicant import Budget
-from ictu.rdb_and_web_integration.backend.app.models.department import Category
-from ictu.rdb_and_web_integration.backend.app.models.program import Expense
-from ictu.rdb_and_web_integration.backend.app.models.admission import Income
-from ictu.rdb_and_web_integration.backend.app.models.notification import SavingGoal
-from models.saving import Saving
-from models.user import User
+from models.applicant import Applicant
+from models.department import Department
+from models.program import Program
+from models.admission import Admission
+from models.notification import Notification
 from os import getenv
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 classes = {
-    "budget": Budget,
-    "category": Category,
-    "expense": Expense,
-    "income": Income,
-    "saving_goal": SavingGoal,
-    "saving": Saving,
-    "user": User
+    "applicant": Applicant,
+    "department": Department,
+    "program": Program,
+    "admission": Admission,
+    "notification": Notification
 }
 
 
@@ -33,11 +29,11 @@ class DBStorage:
 
     def __init__(self):
         """Instantiate a DBStorage object"""
-        APP_MYSQL_USER = getenv("FET_MYSQL_USER")
-        APP_MYSQL_PWD = getenv("FET_MYSQL_PWD")
-        APP_MYSQL_HOST = getenv("FET_MYSQL_HOST")
-        APP_MYSQL_DB = getenv("FET_MYSQL_DB")
-        APP_ENV = getenv("FET_ENV")
+        APP_MYSQL_USER = getenv("APP_MYSQL_USER")
+        APP_MYSQL_PWD = getenv("APP_MYSQL_PWD")
+        APP_MYSQL_HOST = getenv("APP_MYSQL_HOST")
+        APP_MYSQL_DB = getenv("APP_MYSQL_DB")
+        APP_ENV = getenv("APP_ENV")
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'
             .format(
