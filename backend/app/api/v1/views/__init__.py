@@ -37,3 +37,5 @@ from api.v1.views.readers import *
 from api.v1.views.updaters import *
 from api.v1.views.deleters import *
 from api.v1.views.utils import *
+from api.v1.views.get_admissions import *
+from api.v1.views.get_programs import *

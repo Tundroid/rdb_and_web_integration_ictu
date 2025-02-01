@@ -9,7 +9,7 @@ import bcrypt
 
 
 # Third-party imports
-from flask import request, abort
+from flask import request, abort, jsonify
 from flask_jwt_extended import jwt_required
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
@@ -59,13 +59,15 @@ def create_model(model=None):
         request_data = schema.load(request_data)
 
         data_set = [request_data] if type(request_data) is dict else request_data
+        response = []
         for data in data_set:
             if model == "user":
                 data["UserPassword"] = bcrypt.hashpw(data["UserPassword"].encode('utf-8'), bcrypt.gensalt())
             obj = db_model(**data)
             storage.new(obj)
+            response.append(obj.to_dict())
         storage.save()
-        return {}, 201
+        return jsonify(response[0] if type(request_data) is dict else res), 201
     except KeyError:
         abort(404, description={"message": f"Model `{model}`"})
     except IntegrityError as e:

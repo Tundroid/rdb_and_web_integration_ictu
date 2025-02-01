@@ -19,7 +19,7 @@ class Notification(BaseModel, Base):
         NotificationID (int): Unique notification ID.
         AdmissionID (int): Admission ID (FK: Admission.AdmissionID).
         Message (str): Notification message.
-        NotificatioStatus (str): Status of the notification (Sent, Unsent).
+        NotificationStatus (str): Status of the notification (Sent, Unsent).
         CreatedAt (datetime): Timestamp when the notification was created.
         UpdatedAt (datetime): Timestamp when the notification was last updated.
     """
@@ -33,7 +33,7 @@ class Notification(BaseModel, Base):
                              nullable=False, doc="Admission ID")
         Message = Column(Text, nullable=False,
                          doc="Notification message")
-        NotificatioStatus = Column(Enum('Sent', 'Unsent'),
+        NotificationStatus = Column(Enum('Sent', 'Unsent'),
                                    nullable=False, default='Unsent',
                                    doc="Status of the notification")
         CreatedAt = Column(TIMESTAMP, default=datetime.utcnow,
@@ -46,6 +46,6 @@ class NotificationSchema(Schema):
     NotificationID = fields.Int(dump_only=True)
     AdmissionID = fields.Int(required=True)
     Message = fields.Str(required=True)
-    NotificatioStatus = fields.Str(dump_only=True)
+    NotificationStatus = fields.Str(missing="Unsent")
     CreatedAt = fields.DateTime(dump_only=True)
     UpdatedAt = fields.DateTime(dump_only=True)

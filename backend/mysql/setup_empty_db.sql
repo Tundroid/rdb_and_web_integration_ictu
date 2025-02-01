@@ -62,7 +62,7 @@ BEGIN
 
     SET notificationMessage = CONCAT(
         'Your application for the program: ', 
-         (SELECT ProgramName FROM Program WHERE ProgramCode = ProgramCode),
+         (SELECT ProgramName FROM Program WHERE ProgramCode = ProgramCode LIMIT 1),
          ', Application ID: ', 
         admissionID,
         " has been "
