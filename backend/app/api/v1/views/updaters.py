@@ -40,21 +40,23 @@ def update_model(model=None):
 
         data = [data] if type(data) is dict else data
         for piece in data:
-            db_model = storage.get(classes[model], filter)
+            db_model = storage.get(classes[model], filters)
             for key, value in piece.items():
                 setattr(db_model, key, value)
         storage.save()
+        if model == "admission":
+            storage.send_mail()
         
         return {}, 200
     
-    except (KeyError, ValueError) as e:
-        abort(404, description={"message":  f"Model `{model}`"})
+    # except (KeyError, ValueError) as e:
+    #     abort(404, description={"message":  f"Model `{model}`"})
     except (IntegrityError) as e:
         match = re.search(r"Duplicate entry '(.+?)'", str(e.orig))
         duplicate_value = match.group(1) if match else "Unknown"
         abort(409, description={"message": f"Resource(s) already exists in Model `{model}`, check value(s) `{duplicate_value}`"})
     except ValidationError as e:
-        abort(400, description={"message":  e.messages})
+        abort(400, description={"message":  e.messages, "type": "param"})
 
 
 class AdmissionFilterSchema(Schema):

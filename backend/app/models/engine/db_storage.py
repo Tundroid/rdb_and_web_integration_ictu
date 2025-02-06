@@ -13,6 +13,11 @@ from os import getenv
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 classes = {
     "applicant": Applicant,
     "department": Department,
@@ -134,3 +139,45 @@ class DBStorage:
         """
         return self.__session
 
+    def send_mail(self):
+        # Sender email credentials
+        SMTP_SERVER = "moleculesoft.net"  # Change this for other email providers
+        SMTP_PORT = 465
+        EMAIL_SENDER = "admissions@moleculesoft.net"
+        EMAIL_PASSWORD = "Admissions.25"  # Use App Password if 2FA is enabled
+        EMAIL_RECEIVER = ""
+        
+        # Connect to SMTP server and send email
+        server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT)
+        server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        
+        notifications = self.all(Notification)
+        for notification in notifications.values():
+            try:
+                if notification.NotificationStatus == "Unsent":
+                    admission = self.get(Admission, {"AdmissionID": notification.AdmissionID})
+                    if admission:
+                        applicant = self.get(Applicant, {"ApplicantID": admission.ApplicantID})
+                        if applicant:
+                            EMAIL_RECEIVER = applicant.Email
+                            
+                            # Create the email
+                            msg = MIMEMultipart()
+                            msg["From"] = EMAIL_SENDER
+                            msg["To"] = EMAIL_RECEIVER
+                            msg["Subject"] = "Application Status"
+                            body = notification.Message
+                            msg.attach(MIMEText(body, "plain"))
+
+                            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+                            
+                            setattr(notification, "NotificationStatus", "Sent")
+                            print("Email sent successfully!")
+                        else:
+                            print("Could not retrieve applicant")
+                    else:
+                        print("Could not retrieve admission")
+            except Exception as e:
+                print(f"Error: {e}")
+        self.save()
+        server.quit

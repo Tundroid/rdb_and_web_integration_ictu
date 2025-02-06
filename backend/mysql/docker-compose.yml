@@ -10,7 +10,8 @@ services:
     volumes:
       - rdb_web_db_data:/var/lib/mysql  # Persistent storage for database data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Run initialization script
-      - ./setup_empty_db.sql:/docker-entrypoint-initdb.d/setup_empty_db.sql  # Database dump
+      # - ./setup_empty_db.sql:/docker-entrypoint-initdb.d/setup_empty_db.sql  # Database dump
+      - ./ca_db.sql:/docker-entrypoint-initdb.d/ca_db.sql  # Database dump
     networks:
       - rdb_web_network
 

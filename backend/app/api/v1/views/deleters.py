@@ -27,13 +27,6 @@ def delete_model(model=None):
         abort(400, description={"message": "Model is required"})
 
     try:
-        # data = request.get_json(silent=True)
-        # print("data:", request.data)
-        # print("headers:", request.headers)
-        # if not data:
-        #     print("No data")
-        #     abort(400, description="Valid JSON data required")
-
         model_cls = classes[model]
         filters = request.args
         filters = eval(f"{model_cls.__name__}FilterSchema")().load(filters)
@@ -53,13 +46,11 @@ def delete_model(model=None):
         abort(400, description={"message":  e.messages})
 
 
-class CategoryFilterSchema(Schema):
-    UserID = fields.Integer(required=True)
-    CategoryID = fields.Integer(required=True)
+class ProgramFilterSchema(Schema):
+    ProgramCode = fields.String(required=True)
 
-class ExpenseFilterSchema(Schema):
-    UserID = fields.Integer(required=True)
-    ExpenseID = fields.Integer(required=True)
+class DepartmentFilterSchema(Schema):
+    DepartmentID = fields.Integer(required=True)
     
 class IncomeFilterSchema(Schema):
     UserID = fields.Integer(required=True)

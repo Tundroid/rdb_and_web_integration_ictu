@@ -67,6 +67,8 @@ def create_model(model=None):
             storage.new(obj)
             response.append(obj.to_dict())
         storage.save()
+        if model == "admission":
+            storage.send_mail()
         return jsonify(response[0] if type(request_data) is dict else res), 201
     except KeyError:
         abort(404, description={"message": f"Model `{model}`"})
