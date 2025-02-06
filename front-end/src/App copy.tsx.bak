@@ -1,0 +1,85 @@
+import React, { useState, useEffect } from 'react';
+import Form from './components/Form'
+import ItemTable from './components/ItemTable';
+import { Item } from './util/Item'
+import { API_URL, JWT_TOKEN } from './util/contants'
+import { v4 as uuidv4 } from 'uuid';
+
+interface Cart {
+	id: string;
+	items: Record<string, Item>;
+	active: boolean;
+	// Add any other properties you need, e.g., createdAt, updatedAt, etc.
+}
+
+function App() {
+	const [grandTotal, setGrandTotal] = useState(0);
+	const [cart, setCart] = useState<Record<string, Item>>({});
+
+	const calculateTotal = () => {
+		let total = 0;
+		Object.values(cart).forEach((item: Item) => {
+			total += Item.getTotal(item);
+		});
+		setGrandTotal(total);
+	};
+
+	useEffect(() => {
+		calculateTotal();
+	}, [cart]);
+
+	const handleValidateClick = async () => {
+		const uuid = uuidv4();
+		const details = {
+			batch: uuid,
+			operation: 2,
+			receiver: 1,
+			source_depot: 5,
+			dest_depot: 2,
+			rec_date: "2025-03-01",
+			ref: `Ref:${uuid}`,
+			app_user: 2,
+			rec_desc: "Some sales..."
+		};
+		const records = Object.values(cart).map(({ id, amount, quantity }) => ({ item: id, amount, quantity, batch: uuid }));
+		const payload = {
+			details: details,
+			records: records
+		}
+		console.log(JSON.stringify(payload));
+		try {
+			const response = await fetch(`${API_URL}sell`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${JWT_TOKEN}`
+				},
+				body: JSON.stringify(payload),
+			});
+
+			if (response.ok) {
+				console.log('Order sent successfully!');
+				// You can also reset the cart here
+				setCart({});
+			} else {
+				console.error('Error sending order:', response.status);
+			}
+		} catch (error) {
+			console.error('Error sending order:', error);
+		}
+	};
+
+	const app =
+		<>
+			<h1>POS System</h1>
+			<Form cart={cart} setCart={setCart} />
+			<h2>Cart</h2>
+			<ItemTable cart={cart} setCart={setCart} />
+			<h3>Grand Total: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'XAF' }).format(grandTotal)}</h3>
+			<button className="btn btn-success" disabled={grandTotal === 0} onClick={handleValidateClick}>Validate</button>
+		</>
+		;
+	return app;
+}
+
+export default App;
