@@ -33,6 +33,7 @@ def get_admissions():
         query = storage.session.query(
                 Admission.AdmissionID,
                 Applicant.FullName,
+                Program.ProgramCode,
                 Program.ProgramName,
                 Department.DepartmentName,
                 Admission.ApplicationDate,
@@ -60,6 +61,7 @@ class AdmissionsSchema(Schema):
     DepartmentName = fields.String()
     ApplicationDate = fields.Date()
     ApplicationStatus = fields.String()
+    ProgramCode = fields.String()
 
 
 class AdmissionFilterSchema(Schema):
