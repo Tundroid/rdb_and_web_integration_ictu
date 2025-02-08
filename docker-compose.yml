@@ -1,0 +1,12 @@
+services:
+  react-app:
+    build:
+      context: ./front-end  # Set the correct path to the React project
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front-end:/app  # Mount the correct frontend directory
+      - /app/node_modules  # Prevents overwriting node_modules
+    stdin_open: true
+    tty: true

@@ -55,6 +55,9 @@ const ApplicantPage = () => {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
+		console.log("ProgramCode: ", programCode);
+		// return;
+
 		const applicantPayload = {
 			FullName: fullName,
 			Email: email,

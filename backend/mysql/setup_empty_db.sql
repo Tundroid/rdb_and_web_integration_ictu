@@ -53,8 +53,8 @@ CREATE TABLE Notification (
 
 DELIMITER ;;
 CREATE PROCEDURE CreateAdmissionNotification(
-    AdmissionID INT,
-    ProgramCode VARCHAR(10),
+    ad INT,
+    pc VARCHAR(10),
     NewStatus ENUM('Accepted', 'Pending', 'Rejected')
 )
 BEGIN
@@ -62,9 +62,9 @@ BEGIN
 
     SET notificationMessage = CONCAT(
         'Your application for the program: ', 
-         (SELECT ProgramName FROM Program WHERE ProgramCode = ProgramCode LIMIT 1),
+         (SELECT ProgramName FROM Program WHERE ProgramCode = pc LIMIT 1),
          ', Application ID: ', 
-        admissionID,
+        ad,
         " has been "
     );
 
@@ -72,21 +72,21 @@ BEGIN
         SET notificationMessage = CONCAT(
             notificationMessage,
             " received and is pending review. Keep checking your mail and expect to hear from
-            us within the next five (5) working days. Thanks for applying with us.");
+            us within the next five (5) working days.\nThanks for applying with us.");
     ELSEIF NewStatus = "Accepted" THEN
         SET notificationMessage = CONCAT(
             notificationMessage,
             " accepted. A follow-up mail on how to continue will be sent to you shortly.
-            In the mean time, congratulations!");
+            \nIn the mean time, congratulations!");
     ELSE
         SET notificationMessage = CONCAT(
             notificationMessage,
-            " rejected. Reply with ""WHY?"" to find out the reason of rejection.Sorry! Better luck next time.");
+            " rejected. Reply with ""WHY?"" to find out the reason of rejection.\nSorry! Better luck next time.");
     END IF;
 
     INSERT INTO Notification (AdmissionID, Message)
     VALUES (
-        AdmissionID, 
+        a, 
         notificationMessage
     );
 END ;;
